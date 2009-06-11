@@ -297,10 +297,11 @@ sub implements(@) {
     *{ $caller . "::import" } = sub {
 
       # don't cascade up to the interface.
-      }
+    }
   }
 
-  makeMagicConstructor($caller);
+  makeTypeMethods( $caller );
+  makeMagicConstructor( $caller );
 
   push @{ $caller . "::ISA" }, @_;
 }
@@ -353,7 +354,8 @@ sub extends(*) {
     error $dieMessage;
   }
 
-  makeMagicConstructor($caller);
+  makeTypeMethods( $caller );
+  makeMagicConstructor( $caller );
 
   push @{ $caller . "::ISA" }, @_;
 }
@@ -440,6 +442,25 @@ sub makeMagicConstructor {
       }
 
       return $self
+    };
+  }
+}
+
+# add typeOf method to the caller
+sub makeTypeMethods {
+  my $caller = shift;
+
+  # make a typeOf method
+  unless ( defined &{ $caller . "::typeOf" } ) {
+    *{ $caller . "::typeOf" } = sub {
+      my $self = shift;
+      my $type = shift;
+
+      if ( $type ) {
+	return grep { $_ eq $type } @{ $caller . "::ISA" };
+      }
+
+      return @{ $caller . "::ISA" };
     };
   }
 }

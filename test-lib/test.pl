@@ -10,25 +10,31 @@ use Car::Factory;
 
 my $factory = new Car::Factory;
 
-foreach my $car ( qw(fiat ford mercedes) ) {
-  print "-- " . uc($car) . ":";
-  my $c = $factory->createCar($car);
+foreach my $model ( qw(fiat ford mercedes) ) {
 
-  $c->openDoors & $c->closeDoors;
-  $c->start;
+  print "-- " . uc($model) . ":";
+  my $car = $factory->createCar($model);
 
-  if ( $c->isa("Car::Runnable") ) {
+  print "The car isa : " . join(", ", $car->typeOf);
+
+  print "The $car car " . ( $car->can("implements") ? "can" : "cant" ) . " tell what it implements";
+
+  $car->openDoors & $car->closeDoors;
+  $car->start;
+
+  if ( $car->typeOf("Car::Runnable") ) {
     local $\ = "";
-    print ("-- we can run the car!\n  ") & $c->run;
+    print ("-- we can run the car!\n  ") & $car->run;
     print "\n\n";
   }
 
-  $c->stop;
+  $car->stop;
 
-  $c->openDoors & $c->closeDoors;
+  $car->openDoors & $car->closeDoors;
   print "\n";
 }
 
 if ( $factory->isa("Car::AFactory") ) {
   print join(", ", @{$factory->createdCars});
 }
+
