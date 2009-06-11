@@ -513,6 +513,12 @@ I would strongly advice using something like Class::AccessorMaker though...
 
 If you want magic constructors; set $Class::Interface::AUTO_CONSTRUCTOR to 1
 
+=head1 MORE MAGIC
+
+Each implementing or extending class will be automagicly equiped with
+a typeOf method (unless it previously existed) which acts in the same
+way as UNIVERSAL::isa
+
 =head1 ERROR HANDLING
 
 If anything fails uses Carp::croak. Once you set $Class::Interface::CONFESS
